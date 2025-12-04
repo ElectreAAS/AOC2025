@@ -1,3 +1,5 @@
 _opam/
 _build/
 */input.txt
+dev-tools.locks/
+.vscode/

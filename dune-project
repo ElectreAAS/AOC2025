@@ -1,11 +1,11 @@
 (lang dune 3.7)
 
-(name aoc2022)
+(name aoc2025)
 
 (generate_opam_files true)
 
 (source
- (github ElectreAAS/AOC2022))
+ (github ElectreAAS/AOC2025))
 
 (authors "Ambre Austen Suhamy")
 
@@ -14,10 +14,11 @@
 (license GPL-3.0-only)
 
 (package
- (name aoc2022)
- (synopsis "Advent of Code 2022")
+ (name aoc2025)
+ (synopsis "Advent of Code 2025")
  (depends
-  (domainslib :dev)
+  (domainslib
+   (>= 0.5.1))
   (eio
    (>= 0.8.1))
   (eio_main

@@ -1,3 +1,0 @@
-(library
- (name day8)
- (libraries utils extensions))

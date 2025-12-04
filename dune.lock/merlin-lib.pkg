@@ -1,0 +1,17 @@
+(version 4.16-501)
+
+(build
+ (progn
+  (when
+   %{pkg-self:dev}
+   (run dune subst))
+  (run dune build -p %{pkg-self:name} -j %{jobs})))
+
+(depends ocaml dune csexp)
+
+(source
+ (fetch
+  (url
+   https://github.com/ocaml/merlin/releases/download/v4.16-501/merlin-4.16-501.tbz)
+  (checksum
+   sha256=da5bf309b040645c292ae4572cc6a0a700dbd2bcfc996ac13c8e5c3836c21e26)))

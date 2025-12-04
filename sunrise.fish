@@ -11,7 +11,7 @@ set yesterday (rg "day(\d+)\)\)" utils/dune -Nor '$1')
 set today (math $yesterday + 1)
 echo "Today's date is the $today"
 
-if test $today -gt 25
+if test $today -gt 12
     echo "Nothing new for today"
     exit 1
 end
@@ -46,7 +46,7 @@ echo "(library
  (libraries utils extensions))" >$dir_name/dune
 
 # Get the needed session cookie
-set cookie $AOC2022_SESSION
+set cookie $AOC2025_SESSION
 if test -z "$cookie"
     echo "Session cookie not found!"
     exit 1
@@ -56,7 +56,7 @@ end
 set input_file "$dir_name/input.txt"
 if test ! -f $input_file
     echo "Creating $input_file"
-    set url "https://adventofcode.com/2022/day/$today/input"
+    set url "https://adventofcode.com/2025/day/$today/input"
     curl "$url" -X GET -H "Cookie: session=$cookie" >$input_file
 end
 
