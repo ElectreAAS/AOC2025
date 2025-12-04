@@ -11,4 +11,4 @@
 (library
  (name all)
  (modules all)
- (libraries domainslib eio day0 day1))
+ (libraries domainslib eio day0 day1 day2))
