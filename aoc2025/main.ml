@@ -15,7 +15,7 @@ let dispatch fs n display pool =
   match n with
   | 0 ->
       let total_time = ref 0.0 in
-      for i = 0 to nb_days - 1 do
+      for i = 1 to nb_days - 1 do
         total_time := !total_time +. run i
       done;
       Printf.printf "\nTotal: %.3fms\n" !total_time

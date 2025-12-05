@@ -43,7 +43,7 @@ echo "let day _display _pool input_buffer =
 echo "Creating $dir_name/dune"
 echo "(library
  (name day$today)
- (libraries utils extensions))" >$dir_name/dune
+ (libraries extensions utils))" >$dir_name/dune
 
 # Get the needed session cookie
 set cookie $AOC2025_SESSION

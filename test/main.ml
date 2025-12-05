@@ -8,7 +8,7 @@ let all fs pool =
         fun () ->
           Utils.get_test fs i (fun input_buffer ->
               let (module Day) = All.days.(i) in
-              let result = Day.day false pool input_buffer in
+              let result = Day.day true pool input_buffer in
               Alcotest.(check string)
                 "puzzle input should be solved!" expected result) ))
     All.expected
