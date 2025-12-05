@@ -41,5 +41,7 @@ let () =
               (if display then 0 else Domain.recommended_domain_count () - 1)
             ()
         in
-        Eio_main.run (fun env -> dispatch env#fs n display pool);
+        Eio_main.run (fun env ->
+            Random.self_init ();
+            dispatch env#fs n display pool);
         T.teardown_pool pool
