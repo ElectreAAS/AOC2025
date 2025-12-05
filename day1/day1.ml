@@ -1,6 +1,3 @@
-module EBR = Eio.Buf_read
-open EBR.Syntax
-
 let init_dial = 50
 
 type instruction = Left of int | Right of int
@@ -27,8 +24,8 @@ let go dial = function
       let nb_clicks = raw_result / 100 in
       (raw_result mod 100, nb_clicks)
 
-let day display _pool =
-  let+ lines = EBR.lines in
+let day display _pool input_buffer =
+  let lines = Eio.Buf_read.lines input_buffer in
   let _final_dial, result =
     Seq.fold_left
       (fun (dial, sum) line ->
