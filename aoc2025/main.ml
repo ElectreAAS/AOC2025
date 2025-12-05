@@ -37,7 +37,8 @@ let () =
     | Some n ->
         let pool =
           T.setup_pool ~name:"dispatcher"
-            ~num_domains:(Domain.recommended_domain_count () - 1)
+            ~num_domains:
+              (if display then 0 else Domain.recommended_domain_count () - 1)
             ()
         in
         Eio_main.run (fun env -> dispatch env#fs n display pool);
