@@ -7,4 +7,4 @@ end
 let days : (module DAY) array =
   [| (module Day0); (module Day1); (module Day2); (module Day3) |]
 
-let expected = [ ""; "6"; "4174379265"; "357" ]
+let expected = [ ""; "6"; "4174379265"; "3121910778619" ]
