@@ -81,7 +81,7 @@ let gen_new_grid height width =
 let day display _pool input_buffer =
   let lines = Eio.Buf_read.lines input_buffer in
   let grid =
-    if display then gen_new_grid 100 400
+    if false then gen_new_grid 100 400
     else Array.of_seq (Seq.map parse_line lines)
   in
   let height = Array.length grid in
