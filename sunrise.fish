@@ -58,6 +58,11 @@ if test ! -f $input_file
     echo "Creating $input_file"
     set url "https://adventofcode.com/2025/day/$today/input"
     curl "$url" -X GET -H "Cookie: session=$cookie" >$input_file
+    set curl_exit $status
+    if test $curl_exit -ne 0
+        echo "Curl exited with status $curl_exit, aborting."
+        exit $curl_exit
+    end
 end
 
 # Create empty test file
