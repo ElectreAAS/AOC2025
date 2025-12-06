@@ -1,1 +1,1 @@
-let day _ _ _ = ""
+let day _ _ _ = 0

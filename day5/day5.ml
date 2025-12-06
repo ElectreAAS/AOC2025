@@ -43,4 +43,4 @@ let rec cardinal = function
 let day _display _pool input_buffer =
   let lines = Eio.Buf_read.lines input_buffer in
   let ranges = parse_ranges lines in
-  cardinal ranges |> string_of_int
+  cardinal ranges

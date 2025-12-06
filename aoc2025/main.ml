@@ -8,7 +8,7 @@ let dispatch fs n display pool =
     let elapsed, result =
       Utils.with_timer (fun () -> Utils.get_input fs n (Day.day display pool))
     in
-    Printf.printf "\nDay %2d: finished in %7.3fms, with result = %s" n elapsed
+    Printf.printf "\nDay %2d: finished in %7.3fms, with result = %d" n elapsed
       result;
     elapsed
   in

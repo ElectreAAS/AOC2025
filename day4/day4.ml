@@ -114,4 +114,4 @@ let day display _pool input_buffer =
     Notty_unix.Term.image terminal (grid_to_image grid);
     Unix.sleepf 1.0);
   Notty_unix.Term.release terminal;
-  string_of_int res
+  res

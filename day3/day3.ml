@@ -35,4 +35,3 @@ let day display _pool input_buffer =
       if display then Printf.printf "Jolt of line %s is %d\n" line jolt;
       sum + jolt)
     0 lines
-  |> string_of_int

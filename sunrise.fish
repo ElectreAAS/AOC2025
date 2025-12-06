@@ -37,7 +37,7 @@ end
 echo "Creating $dir_name/day$today.ml"
 echo "let day _display _pool input_buffer =
   let line = Eio.Buf_read.line input_buffer in
-  line" >$dir_name/day$today.ml
+  String.length line" >$dir_name/day$today.ml
 
 # Create dune file
 echo "Creating $dir_name/dune"

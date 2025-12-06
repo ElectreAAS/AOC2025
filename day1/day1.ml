@@ -37,4 +37,4 @@ let day display _pool input_buffer =
         (new_dial, sum + nb_clicks))
       (init_dial, 0) lines
   in
-  string_of_int result
+  result

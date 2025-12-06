@@ -70,4 +70,3 @@ let day display pool input_buffer =
           ranges
       in
       List.fold_left (fun sum p -> sum + T.await pool p) 0 promises)
-  |> string_of_int
