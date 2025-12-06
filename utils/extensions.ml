@@ -71,6 +71,20 @@ module List = struct
       | x :: xs -> if pred x then (rev before, l) else aux xs (x :: before)
     in
     aux l []
+
+  let pp oc printer = function
+    | [] -> Printf.fprintf oc "[]"
+    | [ x ] -> Printf.fprintf oc "[%a]" printer x
+    | l ->
+        let rec loop = function
+          | [] -> Printf.fprintf oc "[]"
+          | [ x ] -> Printf.fprintf oc "%a]" printer x
+          | x :: xs ->
+              Printf.fprintf oc "%a; " printer x;
+              loop xs
+        in
+        Printf.fprintf oc "[";
+        loop l
 end
 
 module Array = struct
