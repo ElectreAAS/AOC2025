@@ -1,7 +1,7 @@
 module T = Domainslib.Task
 
 module type DAY = sig
-  val day : bool -> T.pool -> Eio.Buf_read.t -> string
+  val day : bool -> T.pool -> Eio.Buf_read.t -> int
 end
 
 let days : (module DAY) array =
@@ -12,6 +12,7 @@ let days : (module DAY) array =
     (module Day3);
     (module Day4);
     (module Day5);
+    (module Day6);
   |]
 
-let expected = [ ""; "6"; "4174379265"; "3121910778619"; "43"; "14" ]
+let expected = [ 0; 6; 4174379265; 3121910778619; 43; 14; 4277556 ]
