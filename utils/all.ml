@@ -15,4 +15,4 @@ let days : (module DAY) array =
     (module Day6);
   |]
 
-let expected = [ 0; 6; 4174379265; 3121910778619; 43; 14; 4277556 ]
+let expected = [ 0; 6; 4174379265; 3121910778619; 43; 14; 3263827 ]
