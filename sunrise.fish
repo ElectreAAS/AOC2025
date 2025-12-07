@@ -22,7 +22,7 @@ end
 sed -i "s/Day$yesterday);/&\n    (module Day$today);/ ; s/  ]/    \"$argv\";\n  ]/" utils/all.ml
 
 # utils/dune
-sed -i "s/day$yesterday/&\n  day$today/" utils/dune
+sed -i "s/day$yesterday/& day$today/" utils/dune
 
 ## Create the new files
 
