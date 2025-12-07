@@ -14,8 +14,7 @@ module Notty = struct
       let rec aux acc n = if n < 2 then acc else aux (i <|> acc) (n - 1) in
       aux i n
 
-    (** Enclose [image] in a nice frame.
-        Optional arguments [bg & fg] are applied to the box-drawing characters.*)
+    (** Enclose [image] in a nice frame. *)
     let frame image =
       let h = height image and w = width image in
       let pipe = string A.empty "│" in

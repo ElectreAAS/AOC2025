@@ -112,6 +112,6 @@ let day display _pool input_buffer =
   let res = sweep_loop 0 in
   if display then (
     Notty_unix.Term.image terminal (grid_to_image grid);
-    Unix.sleepf 1.0);
+    Unix.sleepf 1.5);
   Notty_unix.Term.release terminal;
   res
