@@ -36,7 +36,7 @@ let () =
     | None -> error ()
     | Some n ->
         let pool =
-          T.setup_pool ~name:"dispatcher"
+          T.setup_pool
             ~num_domains:
               (if display then 0 else Domain.recommended_domain_count () - 1)
             ()

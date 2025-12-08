@@ -1,7 +1,10 @@
+module T = Domainslib.Task
+
 type box = { x : int; y : int; z : int }
 
 let parse line = Scanf.sscanf line "%d,%d,%d" (fun x y z -> { x; y; z })
-let box_to_string { x; y; z } = Format.sprintf "{%d; %d; %d}" x y z
+let box_to_string { x; y; z } = Format.sprintf "{%3d; %3d; %3d}" x y z
+let fake_box = { x = -1; y = -1; z = -1 }
 
 let squared_dist b1 b2 =
   let x = b1.x - b2.x in
@@ -44,37 +47,89 @@ let connect a b graph =
     graph |> Graph.remove a_clique |> Graph.remove b_clique
     |> Graph.add (Clique.union a_clique b_clique)
 
-let day _display _pool input_buffer =
+(** Bucket sort with List.sort as inner sort.  *)
+let faster_sort cmp pool max_value array =
+  let size = Array.length array in
+  let nb_buckets = int_of_float (sqrt (float size)) in
+  let buckets = Array.make nb_buckets [] in
+  let m = max_value + 1 in
+  for i = 0 to size - 1 do
+    let _, _, v = array.(i) in
+    let index = nb_buckets * v / m in
+    buckets.(index) <- array.(i) :: buckets.(index)
+  done;
+  T.run pool (fun () ->
+      T.parallel_for ~start:0 ~finish:(nb_buckets - 1)
+        ~body:(fun i -> buckets.(i) <- List.sort cmp buckets.(i))
+        pool);
+  let a_i = ref 0 in
+  Array.iter
+    (List.iter (fun x ->
+         array.(!a_i) <- x;
+         incr a_i))
+    buckets
+
+let day _display pool input_buffer =
   let lines = Eio.Buf_read.lines input_buffer in
   (* Step 1: Parse all boxes. *)
-  let boxes = Array.of_seq (Seq.map parse lines) in
+  let boxes =
+    let elapsed, array =
+      Utils.with_timer (fun () -> Array.of_seq (Seq.map parse lines))
+    in
+    Format.printf "Step 1 finished in %7.3fms\n" elapsed;
+    array
+  in
   let nb_boxes = Array.length boxes in
   (* Step 2: Compute all distances between all boxes. *)
-  let rec loop i j distances =
-    if i = nb_boxes - 1 then distances
-    else if j = nb_boxes then loop (i + 1) (i + 2) distances
+  let distances =
+    Array.make (nb_boxes * (nb_boxes - 1) / 2) (fake_box, fake_box, -1)
+  in
+  let rec compute_distances counter max_dist i j =
+    if i = nb_boxes - 1 then max_dist
+    else if j = nb_boxes then compute_distances counter max_dist (i + 1) (i + 2)
     else
       let i_box = boxes.(i) in
       let j_box = boxes.(j) in
       let dist = squared_dist i_box j_box in
-      loop i (j + 1) ((i_box, j_box, dist) :: distances)
+      distances.(counter) <- (i_box, j_box, dist);
+      compute_distances (counter + 1) (max max_dist dist) i (j + 1)
   in
-  let sorted_distances =
-    loop 0 1 []
-    |> List.sort (fun (_, _, dist1) (_, _, dist2) -> compare dist1 dist2)
+  let () =
+    (* Step 2.1: Compute all distances. *)
+    let elapsed, max_distance =
+      Utils.with_timer (fun () -> compute_distances 0 0 0 1)
+    in
+    Format.printf "Step 2.1 finished in %7.3fms\n" elapsed;
+    (* Step 2.2: Sort distances. *)
+    let elapsed, () =
+      Utils.with_timer (fun () ->
+          let cmp (_, _, dist1) (_, _, dist2) = compare dist1 dist2 in
+          faster_sort cmp pool max_distance distances)
+    in
+    Format.printf "Step 2.2 finished in %7.3fms\n" elapsed
   in
   (* Step 3: Create graph representation. *)
-  let graph = Graph.of_seq (Seq.map Clique.singleton (Array.to_seq boxes)) in
+  let graph =
+    let elapsed, graph =
+      Utils.with_timer (fun () ->
+          Graph.of_seq (Seq.map Clique.singleton (Array.to_seq boxes)))
+    in
+    Format.printf "Step 3 finished in %7.3fms\n" elapsed;
+    graph
+  in
   (* Step 4: Create connections. *)
-  let rec loop i distances graph last =
+  let rec connections i graph last =
     if Graph.cardinal graph = 1 then last
     else
-      match distances with
-      | [] -> failwith "Not enough distances?"
-      | (a, b, _) :: distances' ->
-          loop (i + 1) distances' (connect a b graph) (a, b)
+      let a, b, _ = distances.(i) in
+      connections (i + 1) (connect a b graph) (a, b)
   in
-  let fake_box = { x = -1; y = -1; z = -1 } in
-  let a, b = loop 0 sorted_distances graph (fake_box, fake_box) in
+  let a, b =
+    let elapsed, result =
+      Utils.with_timer (fun () -> connections 0 graph (fake_box, fake_box))
+    in
+    Format.printf "Step 4 finished in %7.3fms\n" elapsed;
+    result
+  in
   (* Step 5: Multiply X of last connected boxes. *)
   a.x * b.x
