@@ -34,7 +34,7 @@ let graph_to_string graph =
   let body =
     Graph.fold (fun c str -> str ^ " " ^ clique_to_string c) graph ""
   in
-  "#{" ^ body ^ " }"
+  "#{\n" ^ body ^ "\n}"
 
 let connect a b graph =
   let a_clique = find_only a graph in
@@ -43,17 +43,6 @@ let connect a b graph =
     let b_clique = find_only b graph in
     graph |> Graph.remove a_clique |> Graph.remove b_clique
     |> Graph.add (Clique.union a_clique b_clique)
-
-let graph_to_res graph =
-  let rev_sorted =
-    Graph.elements graph
-    |> List.sort (fun c1 c2 ->
-           -compare (Clique.cardinal c1) (Clique.cardinal c2))
-  in
-  match rev_sorted with
-  | a :: b :: c :: _rest ->
-      Clique.cardinal a * Clique.cardinal b * Clique.cardinal c
-  | _ -> failwith "Not at least 3 cliques at the end???"
 
 let day _display _pool input_buffer =
   let lines = Eio.Buf_read.lines input_buffer in
@@ -77,14 +66,15 @@ let day _display _pool input_buffer =
   (* Step 3: Create graph representation. *)
   let graph = Graph.of_seq (Seq.map Clique.singleton (Array.to_seq boxes)) in
   (* Step 4: Create connections. *)
-  let nb_connections = if nb_boxes = 20 then 10 else 1000 in
-  let rec loop i distances graph =
-    if i = nb_connections then graph
+  let rec loop i distances graph last =
+    if Graph.cardinal graph = 1 then last
     else
       match distances with
       | [] -> failwith "Not enough distances?"
-      | (a, b, _) :: distances' -> loop (i + 1) distances' (connect a b graph)
+      | (a, b, _) :: distances' ->
+          loop (i + 1) distances' (connect a b graph) (a, b)
   in
-  let final_graph = loop 0 sorted_distances graph in
-  (* Step 5: Multiply sizes of biggest cliques. *)
-  graph_to_res final_graph
+  let fake_box = { x = -1; y = -1; z = -1 } in
+  let a, b = loop 0 sorted_distances graph (fake_box, fake_box) in
+  (* Step 5: Multiply X of last connected boxes. *)
+  a.x * b.x
