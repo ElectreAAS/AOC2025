@@ -7,7 +7,7 @@
 ########################################################################
 
 ## Find yesterday's date
-set yesterday (rg "day(\d+)\)\)" utils/dune -Nor '$1')
+set yesterday (rg "day(\d+) eio" utils/dune -Nor '$1')
 set today (math $yesterday + 1)
 echo "Today's date is the $today"
 
