@@ -1,5 +1,4 @@
 open Extensions
-module T = Domainslib.Task
 
 type box = { x : int; y : int; z : int }
 

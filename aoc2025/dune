@@ -1,4 +1,4 @@
 (executable
  (name main)
  (public_name aoc2022)
- (libraries all domainslib eio_main utils))
+ (libraries all eio_main utils))

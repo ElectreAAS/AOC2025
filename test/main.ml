@@ -1,4 +1,5 @@
-module T = Domainslib.Task
+open Eio.Std
+module P = Eio.Executor_pool
 
 let all fs pool =
   List.mapi
@@ -14,11 +15,12 @@ let all fs pool =
     All.expected
 
 let () =
+  Eio_main.run @@ fun env ->
+  Random.self_init ();
+  Switch.run @@ fun sw ->
   let pool =
-    T.setup_pool ~name:"tester"
-      ~num_domains:(Domain.recommended_domain_count () - 1)
-      ()
+    P.create ~sw
+      ~domain_count:(Domain.recommended_domain_count () - 1)
+      (Eio.Stdenv.domain_mgr env)
   in
-  Eio_main.run (fun env ->
-      Alcotest.run "Everything" [ ("Test puzzle input", all env#fs pool) ]);
-  T.teardown_pool pool
+  Alcotest.run "Everything" [ ("Test puzzle input", all env#fs pool) ]

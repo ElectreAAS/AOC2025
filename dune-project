@@ -17,8 +17,6 @@
  (name aoc2025)
  (synopsis "Advent of Code 2025")
  (depends
-  (domainslib
-   (>= 0.5.1))
   (eio
    (>= 0.8.1))
   (eio_main

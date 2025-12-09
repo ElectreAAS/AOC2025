@@ -1,7 +1,7 @@
-module T = Domainslib.Task
+module P = Eio.Executor_pool
 
 module type DAY = sig
-  val day : bool -> T.pool -> Eio.Buf_read.t -> int
+  val day : bool -> P.t -> Eio.Buf_read.t -> int
 end
 
 let days : (module DAY) array =

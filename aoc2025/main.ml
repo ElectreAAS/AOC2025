@@ -1,4 +1,5 @@
-module T = Domainslib.Task
+open Eio.Std
+module P = Eio.Executor_pool
 
 let nb_days = Array.length All.days
 
@@ -35,13 +36,13 @@ let () =
     match Sys.argv.(1) |> int_of_string_opt with
     | None -> error ()
     | Some n ->
+        Eio_main.run @@ fun env ->
+        Random.self_init ();
+        Switch.run @@ fun sw ->
         let pool =
-          T.setup_pool
-            ~num_domains:
+          P.create ~sw
+            ~domain_count:
               (if display then 0 else Domain.recommended_domain_count () - 1)
-            ()
+            (Eio.Stdenv.domain_mgr env)
         in
-        Eio_main.run (fun env ->
-            Random.self_init ();
-            dispatch env#fs n display pool);
-        T.teardown_pool pool
+        dispatch env#fs n display pool

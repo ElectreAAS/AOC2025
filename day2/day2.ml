@@ -1,4 +1,4 @@
-module T = Domainslib.Task
+module P = Eio.Executor_pool
 
 let is_invalid_allsame str =
   let first = str.[0] in
@@ -159,13 +159,15 @@ let day _display pool input_buffer =
   let line = Eio.Buf_read.line input_buffer in
   let ranges = parse line in
   let result =
-    T.run pool (fun () ->
-        let promises =
-          List.map
-            (fun (bot, top) ->
-              T.async pool (fun () -> invalids_in_range_smart (bot, top)))
-            ranges
-        in
-        List.fold_left (fun sum p -> sum + T.await pool p) 0 promises)
+    let promises =
+      List.map
+        (fun (bot, top) ->
+          let promise, resolver = Eio.Promise.create () in
+          P.submit_exn pool ~weight:0.1 (fun () ->
+              Eio.Promise.resolve resolver (invalids_in_range_smart (bot, top)));
+          promise)
+        ranges
+    in
+    List.fold_left (fun sum p -> sum + Eio.Promise.await p) 0 promises
   in
   result
