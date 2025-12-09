@@ -98,3 +98,85 @@ module Array = struct
     in
     loop 0
 end
+
+type order = Lesser | Equal | Greater
+
+let compare x y = if x < y then Lesser else if x = y then Equal else Greater
+
+module BinHeap : sig
+  type 'a t
+  (** A binary heap. *)
+
+  val make : ?cmp:('a -> 'a -> order) -> int -> 'a -> 'a t
+  (** [make ~cmp size init] creates a binary heap of maximum [size].
+      [init] will never be seen.
+      if [cmp] is not provided, it defaults to [compare], making a maxheap.
+      To make a minheap, reverse the usual order. *)
+
+  val insert : 'a t -> 'a -> unit
+  val extract : 'a t -> 'a option
+  val extract_exn : 'a t -> 'a
+end = struct
+  type 'a t = { heap : 'a array; mutable size : int; cmp : 'a -> 'a -> order }
+
+  let make ?(cmp = compare) size init =
+    let heap = Array.make size init in
+    { heap; size = 0; cmp }
+
+  let children_of index =
+    let double = index lsl 1 in
+    (double + 1, double + 2)
+
+  let parent_of index = (index - 1) / 2
+
+  let insert t elt =
+    if t.size = Array.length t.heap then
+      invalid_arg "Can't insert element into full binary heap";
+    t.heap.(t.size) <- elt;
+    let rec loop i =
+      let parent = parent_of i in
+      let i_value = t.heap.(i) in
+      if parent < 0 || t.cmp t.heap.(parent) i_value <> Lesser then ()
+      else (
+        t.heap.(i) <- t.heap.(parent);
+        t.heap.(parent) <- i_value;
+        loop parent)
+    in
+    loop t.size;
+    t.size <- t.size + 1;
+    ()
+
+  let extract t =
+    match t.size with
+    | 0 -> None
+    | 1 ->
+        let result = t.heap.(0) in
+        t.size <- 0;
+        Some result
+    | size ->
+        let result = t.heap.(0) in
+        t.heap.(0) <- t.heap.(size - 1);
+        let rec loop i =
+          let i_value = t.heap.(i) in
+          let left, right = children_of i in
+          if left >= t.size then ()
+          else
+            let bigger_child =
+              if right >= t.size || t.cmp t.heap.(left) t.heap.(right) <> Lesser
+              then left
+              else right
+            in
+            if t.cmp i_value t.heap.(bigger_child) = Lesser then (
+              t.heap.(i) <- t.heap.(bigger_child);
+              t.heap.(bigger_child) <- i_value;
+              loop bigger_child)
+        in
+        loop 0;
+        t.size <- t.size - 1;
+        Some result
+
+  let extract_exn t =
+    match extract t with
+    | Some x -> x
+    | None -> invalid_arg "Can't extract element from empty binary heap"
+end
