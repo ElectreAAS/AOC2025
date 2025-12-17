@@ -114,6 +114,7 @@ module BinHeap : sig
       To make a minheap, reverse the usual order. *)
 
   val insert : 'a t -> 'a -> unit
+  val peek : 'a t -> 'a option
   val extract : 'a t -> 'a option
   val extract_exn : 'a t -> 'a
 end = struct
@@ -145,6 +146,8 @@ end = struct
     loop t.size;
     t.size <- t.size + 1;
     ()
+
+  let peek t = match t.size with 0 -> None | _ -> Some t.heap.(0)
 
   let extract t =
     match t.size with
