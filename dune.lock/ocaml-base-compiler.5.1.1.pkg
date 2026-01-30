@@ -1,0 +1,83 @@
+(version 5.1.1)
+
+(install
+ (all_platforms
+  (run %{make} install)))
+
+(build
+ (choice
+  ((((arch x86_64)
+     (os linux))
+    ((arch arm64)
+     (os linux)))
+   ((action
+     (progn
+      (run
+       ./configure
+       (when
+        (catch_undefined_var
+         (and_absorb_undefined_var
+          (= %{os_distribution} cygwin)
+          %{pkg:system-mingw:installed}
+          %{pkg:arch-x86_64:installed})
+         false)
+        --host=x86_64-w64-mingw32)
+       (when
+        (catch_undefined_var
+         (and_absorb_undefined_var
+          (= %{os_distribution} cygwin)
+          %{pkg:system-mingw:installed}
+          %{pkg:arch-x86_32:installed})
+         false)
+        --host=i686-w64-mingw32)
+       --prefix=%{prefix}
+       --docdir=%{doc}/ocaml
+       -C)
+      (run %{make} -j%{jobs})))))
+  ((((arch x86_64)
+     (os macos))
+    ((arch arm64)
+     (os macos)))
+   ((action
+     (progn
+      (run
+       ./configure
+       (when
+        (catch_undefined_var
+         (and_absorb_undefined_var
+          (= %{os_distribution} cygwin)
+          %{pkg:system-mingw:installed}
+          %{pkg:arch-x86_64:installed})
+         false)
+        --host=x86_64-w64-mingw32)
+       (when
+        (catch_undefined_var
+         (and_absorb_undefined_var
+          (= %{os_distribution} cygwin)
+          %{pkg:system-mingw:installed}
+          %{pkg:arch-x86_32:installed})
+         false)
+        --host=i686-w64-mingw32)
+       --prefix=%{prefix}
+       --docdir=%{doc}/ocaml
+       -C
+       CC=cc
+       "ASPP=cc -c")
+      (run %{make} -j%{jobs})))))))
+
+(source
+ (fetch
+  (url https://github.com/ocaml/ocaml/archive/5.1.1.tar.gz)
+  (checksum
+   sha256=57f7b382b3d71198413ede405d95ef3506f1cdc480cda1dca1e26b37cb090e17)))
+
+(exported_env
+ (= CAML_LD_LIBRARY_PATH "\%{lib}%/stublibs"))
+
+(extra_sources
+ (ocaml-base-compiler.install
+  (fetch
+   (url
+    https://raw.githubusercontent.com/ocaml/ocaml/8c17fd444391392c5f9801241374d749c080c1a8/ocaml-variants.install)
+   (checksum
+    sha256=79f2a1a5044a91350a0eb6ce12e261a72a2855c094c425cddf3860e58c486678))))

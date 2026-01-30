@@ -1,5 +1,5 @@
-(** [pop_at_plus n str c] removes character in position [n] and appends [c]
-   to the end of [str]. *)
+(** [pop_at_plus n str c] removes character in position [n] and appends [c] to
+    the end of [str]. *)
 let pop_at_plus n str c =
   let left = String.sub str 0 n in
   let right = String.sub str (n + 1) (11 - n) in

@@ -44,8 +44,7 @@ let is_valid id =
   (* In practice there are no numbers above length 10. *)
   | _ -> aux 2
 
-(** Sums all invalid IDs in [bot-top].
-    Iterates over every number. *)
+(** Sums all invalid IDs in [bot-top]. Iterates over every number. *)
 let invalids_in_range (bot, top) =
   let bot', top' = (int_of_string bot, int_of_string top) in
   let rec aux i invalids =
@@ -55,8 +54,8 @@ let invalids_in_range (bot, top) =
   in
   aux bot' 0
 
-(** Sums the invalid IDs in [bot-top] of the form 111 or 2222.
-    Loops at most 10 times. *)
+(** Sums the invalid IDs in [bot-top] of the form 111 or 2222. Loops at most 10
+    times. *)
 let invalids_allsame (bot, top) =
   let bot', top' = (int_of_string bot, int_of_string top) in
   let size = String.length bot in
@@ -71,8 +70,8 @@ let invalids_allsame (bot, top) =
   in
   loop bot_first 0
 
-(** Sums the invalid IDs in [bot-top] of the form halfhalf.
-    For IDs of size n, loops at most 10^(n/2) times. *)
+(** Sums the invalid IDs in [bot-top] of the form halfhalf. For IDs of size n,
+    loops at most 10^(n/2) times. *)
 let invalids_halves (bot, top) =
   let bot', top' = (int_of_string bot, int_of_string top) in
   let size = String.length bot in
@@ -88,8 +87,8 @@ let invalids_halves (bot, top) =
   in
   loop bot_half 0
 
-(** Sums the invalid IDs in [bot-top] of the form thirdthirdthird.
-    For IDs of size n, loops at most 10^(n/3) times. *)
+(** Sums the invalid IDs in [bot-top] of the form thirdthirdthird. For IDs of
+    size n, loops at most 10^(n/3) times. *)
 let invalids_thirds (bot, top) =
   let bot', top' = (int_of_string bot, int_of_string top) in
   let size = String.length bot in
@@ -106,8 +105,8 @@ let invalids_thirds (bot, top) =
   in
   loop bot_third 0
 
-(** Sums the invalid IDs in [bot-top] of the form fifthfifthfifthfifthfifth.
-    For IDs of size n, loops at most 10^(n/5) times. *)
+(** Sums the invalid IDs in [bot-top] of the form fifthfifthfifthfifthfifth. For
+    IDs of size n, loops at most 10^(n/5) times. *)
 let invalids_fifths (bot, top) =
   let bot', top' = (int_of_string bot, int_of_string top) in
   let size = String.length bot in
@@ -126,8 +125,8 @@ let invalids_fifths (bot, top) =
   in
   loop bot_fifth 0
 
-(** Sums all invalid IDs in [bot-top].
-    Doesn't iterate over every number unless [bot & top] are of different sizes. *)
+(** Sums all invalid IDs in [bot-top]. Doesn't iterate over every number unless
+    [bot & top] are of different sizes. *)
 let invalids_in_range_smart (bot, top) =
   let size = String.length bot in
   match String.length top with
@@ -151,9 +150,9 @@ let invalids_in_range_smart (bot, top) =
 let parse line =
   String.split_on_char ',' line
   |> List.map (fun range ->
-         match String.split_on_char '-' range with
-         | [ left; right ] -> (left, right)
-         | _ -> invalid_arg range)
+      match String.split_on_char '-' range with
+      | [ left; right ] -> (left, right)
+      | _ -> invalid_arg range)
 
 let day _display pool input_buffer =
   let line = Eio.Buf_read.line input_buffer in

@@ -25,10 +25,13 @@ let grid_to_image (minx, maxx, miny, maxy) tiles =
 type alignment = Vertical | Horizontal
 
 let is_on_one_edge (x, y) ((ix, iy), (jx, jy)) =
-  if (* vertical *)
-     iy = jy && y = iy && x >= min ix jx && x <= max ix jx then Some Vertical
-  else if (* horizontal *)
-          ix = jx && x = ix && y >= min iy jy && y <= max iy jy
+  if
+    (* vertical *)
+    iy = jy && y = iy && x >= min ix jx && x <= max ix jx
+  then Some Vertical
+  else if
+    (* horizontal *)
+    ix = jx && x = ix && y >= min iy jy && y <= max iy jy
   then Some Horizontal
   else None
 
@@ -47,7 +50,7 @@ let is_on_edge (x, y) tiles =
   in
   loop 0
 
-(** Return true iff edges actually cross (not just overlap).  *)
+(** Return true iff edges actually cross (not just overlap). *)
 let are_edges_crossing ((ix, iy), (jx, jy)) ((kx, ky), (lx, ly)) =
   if ix = jx then
     (* IJ is vertical *)
@@ -88,7 +91,7 @@ let ray_caster (x, y) ~minx tiles =
   in
   loop 0 0
 
-(** Return true iff no borders are crossed.  *)
+(** Return true iff no borders are crossed. *)
 let no_border_cross (ix, iy) (jx, jy) tiles =
   let size = Array.length tiles in
   let rec loop i =

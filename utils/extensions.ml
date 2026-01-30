@@ -61,8 +61,10 @@ module List = struct
     aux n l []
 
   (** [split_on pred l] returns a pair of lists:
-    - the first contains the elements at the start of [l], up to the first element that satisfies pred (not included).
-    - the second contains the elements that follow (first satisfier included). *)
+      - the first contains the elements at the start of [l], up to the first
+        element that satisfies pred (not included).
+      - the second contains the elements that follow (first satisfier included).
+  *)
   let split_on pred l =
     let rec aux l before =
       match l with
@@ -108,10 +110,9 @@ module BinHeap : sig
   (** A binary heap. *)
 
   val make : ?cmp:('a -> 'a -> order) -> int -> 'a -> 'a t
-  (** [make ~cmp size init] creates a binary heap of maximum [size].
-      [init] will never be seen.
-      if [cmp] is not provided, it defaults to [compare], making a maxheap.
-      To make a minheap, reverse the usual order. *)
+  (** [make ~cmp size init] creates a binary heap of maximum [size]. [init] will
+      never be seen. if [cmp] is not provided, it defaults to [compare], making
+      a maxheap. To make a minheap, reverse the usual order. *)
 
   val insert : 'a t -> 'a -> unit
   val peek : 'a t -> 'a option
